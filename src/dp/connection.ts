@@ -7,11 +7,11 @@ export const connectionDB=async()=>{
     try{
         await createConnection({
             type: "postgres",
-            host: "db.dzgcboayiitowsqexckt.supabase.co",
-            port:5432,
-            username: "postgres",
-            password:"codeforces@1999",
-            database: "postgres",
+            host: process.env.PGHOST,
+            port: +process.env.PGPORT!,
+            username: process.env.PGUSER,
+            password:process.env.PGPASSWORD,
+            database: process.env.PGDATABASE,
             synchronize:true,
             logging:false,
             entities:[User,Post,Comment,Vote],
