@@ -1,0 +1,32 @@
+{
+  "name": "reddit_apis",
+  "version": "1.0.0",
+  "description": "Social Media App",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.ts",
+    "dev": "nodemon src/index.ts"
+  },
+  "author": "Mustafa Elgmal",
+  "license": "ISC",
+  "dependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "helmet": "^5.1.0",
+    "pg": "^8.7.3",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.3.7",
+    "validator": "^13.7.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/morgan": "^1.9.3",
+    "@types/node": "^18.0.6",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.19"
+  }
+}
