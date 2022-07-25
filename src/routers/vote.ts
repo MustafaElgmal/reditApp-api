@@ -32,17 +32,6 @@ router.post("/:id", async (req, res) => {
     }
     const votee=Vote.create({userVote,userId,postId:+id})
     await votee.save()
-    if(userVote===1){
-        post.upVoteTotal++
-        if(post.downVoteTotal!==0)
-        post.downVoteTotal--
-        
-    }else{
-        post.downVoteTotal++
-        if(post.upVoteTotal!==0)
-        post.upVoteTotal--
-    }
-    await post.save()
     res.send({ message: "Vote was created" });
   } catch (e) {
     res.status(500).send({ error: "Server is down!" });

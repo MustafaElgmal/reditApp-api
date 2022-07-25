@@ -34,7 +34,6 @@ router.post('/:id',async(req,res)=>{
             postId:+id
         })
         await comment.save()
-        post.commentsTotal++
         await post.save()
 
         res.status(201).send({comment})
@@ -87,7 +86,6 @@ router.delete('/:id',async(req,res)=>{
         }
         const post=await Post.findOne({where:{id:comment.postId}})
         if(post){
-            post.commentsTotal--
             await post.save()
         }
         await Comment.delete(parseInt(id))

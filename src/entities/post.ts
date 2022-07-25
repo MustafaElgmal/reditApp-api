@@ -30,15 +30,4 @@ export class Post extends BaseEntity{
 
     @OneToMany(()=>Vote,(vote)=>vote.post,{nullable:true})
     votes:Vote[]
-
-    @Column({default:0})
-    commentsTotal:number
-
-    @Column({default:0})
-    downVoteTotal:number
-
-    @Column({default:0})
-    upVoteTotal:number
-
-
 }

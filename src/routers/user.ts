@@ -9,7 +9,7 @@ const router=Router()
 router.post('/',async(req,res)=>{
     const errors=await vaildateUser(req.body)
     if(errors.error!==''){
-        return res.status(400).send(errors)
+        return res.status(400).json(errors)
     }
 
     try{

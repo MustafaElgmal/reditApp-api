@@ -41,7 +41,7 @@ export const vaildateLogin=async(user:any)=>{
     if(!email){
         return{error:"Email is required !"}
     }
-    const userFind=await User.findOne({where:email})
+    const userFind=await User.findOne({where:{email}})
     if(!userFind){
         return{error:"Email is not vaild !"}
     }
