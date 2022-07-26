@@ -22,7 +22,7 @@ router.post('/',async(req,res)=>{
             password
         })
         await user.save()
-        res.status(201).send({message:"User is created"})
+        res.status(201).send({user})
 
     }catch(e){
         res.status(500).send({error:"Server is down !"})
