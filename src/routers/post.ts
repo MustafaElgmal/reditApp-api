@@ -1,5 +1,7 @@
 import { Router } from "express";
+import { In } from "typeorm";
 import { Post } from "../entities/post";
+import { Tag } from "../entities/tag";
 import { User } from "../entities/user";
 import { vaildatePost } from "../functions";
 
@@ -11,12 +13,16 @@ router.post("/", async (req, res) => {
     return res.status(400).send(errors);
   }
   try {
-    const { title, body, userId } = req.body;
+    let { title, body, userId,tagIds} = req.body;
     const user = await User.findOne({ where: { id: userId } });
     if (!user) {
       return res.status(404).send({ error: "User is not found!" });
     }
-    const post = Post.create({ title, body, userId });
+    if(typeof tagIds==='number'){
+      tagIds=[tagIds]
+    }
+    const tags=await Tag.find({where:{id:In(tagIds||[])}})
+    const post = Post.create({ title, body, userId,tags});
     await post.save();
     res.status(201).send({ post });
   } catch (e) {
@@ -34,8 +40,8 @@ router.get("/", async (req, res) => {
       return {
         ...post,
         commentsTotal: post.comments.length,
-        upVoteTotal: post.votes.filter((vote) => vote.userVote === 1).length,
-        downVoteTotal: post.votes.filter((vote) => vote.userVote === -1).length,
+        upVotesTotal: post.votes.filter((vote) => vote.userVote === 1).length,
+        downVotesTotal: post.votes.filter((vote) => vote.userVote === -1).length,
       };
     });
     res.send({ posts: rss });
@@ -62,8 +68,8 @@ router.get("/:id", async (req, res) => {
     }
     const post={...postfind,
         commentsTotal: postfind.comments.length,
-        upVoteTotal: postfind.votes.filter((vote) => vote.userVote === 1).length,
-        downVoteTotal: postfind.votes.filter((vote) => vote.userVote === -1).length}
+        upVotesTotal: postfind.votes.filter((vote) => vote.userVote === 1).length,
+        downVotesTotal: postfind.votes.filter((vote) => vote.userVote === -1).length}
 
     res.send({ post });
   } catch (e) {

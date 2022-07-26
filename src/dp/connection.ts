@@ -1,6 +1,7 @@
 import { createConnection } from "typeorm";
 import { Comment } from "../entities/comment";
 import { Post } from "../entities/post";
+import { Tag } from "../entities/tag";
 import { User } from "../entities/user";
 import { Vote } from "../entities/vote";
 export const connectionDB=async()=>{
@@ -14,7 +15,7 @@ export const connectionDB=async()=>{
             database: process.env.PGDATABASE,
             synchronize:true,
             logging:false,
-            entities:[User,Post,Comment,Vote],
+            entities:[User,Post,Comment,Vote,Tag],
             migrations:["migration/*.ts"],
             subscribers:[]
         });

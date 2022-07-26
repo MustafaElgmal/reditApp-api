@@ -1,6 +1,7 @@
 const vaildator=require('validator')
 import { User } from "./entities/user"
 import bcrypt from 'bcrypt'
+import { Tag } from "./entities/tag"
 
 export const vaildateUser=async(user:any)=>{
     const {firstName,lastName,email,password}=user
@@ -30,7 +31,7 @@ export const vaildateUser=async(user:any)=>{
         return{error:"Password is required !"}
     }
     if(!vaildator.isStrongPassword(password)){
-        return{error:"Passord :minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1"}
+        return{error:"Password :minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1"}
     }
     return {error:''}
 }
@@ -57,7 +58,7 @@ export const vaildateLogin=async(user:any)=>{
 }
 
 export const vaildatePost=async(post:any)=>{
-    const {title,body,userId}=post
+    const {title,body,userId,tags}=post
 
     if(!title){
         return {error:"title is required !"}
@@ -120,4 +121,15 @@ export const vaildateVote=async(votee:any)=>{
     }
     return {error:''}
 
+}
+
+export const vaildateTag=async(tag:any)=>{
+    const {title}=tag
+    if(!title){
+        return {error:'title is required!'}
+    }
+    if(typeof title !=='string'){
+        return {error:'title should be string!'}
+    }
+    return {error:''}
 }

@@ -16,11 +16,11 @@ export class Comment extends BaseEntity{
     @Column()
     postId:number
 
-    @CreateDateColumn({type:'timestamp'})
-    createAt:Date
+    @CreateDateColumn({type:'timestamptz'})
+    createdAt:Date
 
-    @UpdateDateColumn({type:'timestamp',onUpdate:'CURRENT_TIMESTAMP(6)'})
-    updateAt:Date
+    @UpdateDateColumn({type:'timestamptz',onUpdate:'CURRENT_TIMESTAMP(6)'})
+    updatedAt:Date
 
     @ManyToOne(()=>Post,(post)=>post.comments,{nullable:false,onDelete:'CASCADE',onUpdate:'CASCADE'})
     post:Post

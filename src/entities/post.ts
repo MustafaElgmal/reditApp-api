@@ -1,5 +1,6 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, UpdateDateColumn,PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, UpdateDateColumn,PrimaryGeneratedColumn, OneToMany, JoinColumn, JoinTable, ManyToMany } from "typeorm";
 import { Comment } from "./comment";
+import { Tag } from "./tag";
 import { User } from "./user";
 import { Vote } from "./vote";
 
@@ -15,12 +16,13 @@ export class Post extends BaseEntity{
     body:string
     @Column()
     userId:number
+    
 
-    @CreateDateColumn({type:'timestamp'})
+    @CreateDateColumn({type:'timestamptz'})
     createdAt:Date
 
-    @UpdateDateColumn({type:'timestamp',onUpdate:'CURRENT_TIMESTAMP(6)'})
-    updateAt:Date
+    @UpdateDateColumn({type:'timestamptz',onUpdate:'CURRENT_TIMESTAMP(6)'})
+    updatedAt:Date
 
     @ManyToOne(()=>User,(user)=>user.posts,{nullable:false,onDelete:'CASCADE',onUpdate:'CASCADE'})
     user:User
@@ -30,4 +32,8 @@ export class Post extends BaseEntity{
 
     @OneToMany(()=>Vote,(vote)=>vote.post,{nullable:true})
     votes:Vote[]
+
+    @ManyToMany(()=>Tag,(tag)=>tag.posts,{onDelete:"CASCADE"})
+    @JoinTable({name:"postTag"})
+    tags:Tag[]
 }

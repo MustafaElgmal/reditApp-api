@@ -7,7 +7,8 @@ import { connectionDB } from './dp/connection'
 import userRouter from './routers/user'
 import postRouter from './routers/post'
 import commentRouter from './routers/comment'
-import voteRouter from './routers/vote'
+import voteRouter from './routers/vote' 
+import tagRouter from './routers/tag'
 
 
 const app=express()
@@ -21,6 +22,7 @@ app.use('/users',userRouter)
 app.use('/posts',postRouter)
 app.use('/comments',commentRouter)
 app.use('/votes',voteRouter)
+app.use('/tags',tagRouter)
 
 app.get('*',(req,res)=>{
     res.status(401).send({error:'Api not found!'})
