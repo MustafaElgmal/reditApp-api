@@ -1,14 +1,20 @@
-import { BaseEntity, Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Post } from "./post";
 
 @Entity()
-export class Tag extends BaseEntity{
-    @PrimaryGeneratedColumn()
-    id:number
+export class Tag extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    title:string
+  @Column()
+  title: string;
 
-    @ManyToMany(()=>Post,(post)=>post.tags)
-    posts:Post[]
+  @ManyToMany(() => Post, (post) => post.tags)
+  posts: Post[];
 }

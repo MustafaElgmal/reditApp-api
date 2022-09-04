@@ -21,7 +21,7 @@ export const connectionDB=async()=>{
         });
 
     }catch(e){
-       console.log(e)
+        console.log(e)
         console.log("ConnectionDB is notVaild!")
     }
 }

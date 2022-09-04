@@ -1,31 +1,40 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import { Post } from "./post";
 import { User } from "./user";
 
 @Entity()
-export class Comment extends BaseEntity{
-    @PrimaryGeneratedColumn()
-    id:number
+export class Comment extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    body:string
+  @Column()
+  body: string;
 
-    @Column()
-    userId:number
+  @CreateDateColumn({ type: "timestamptz" })
+  createdAt: Date;
 
-    @Column()
-    postId:number
+  @UpdateDateColumn({ type: "timestamptz", onUpdate: "CURRENT_TIMESTAMP(6)" })
+  updatedAt: Date;
 
-    @CreateDateColumn({type:'timestamptz'})
-    createdAt:Date
+  @ManyToOne(() => Post, (post) => post.comments, {
+    nullable: false,
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
+  post: Post;
 
-    @UpdateDateColumn({type:'timestamptz',onUpdate:'CURRENT_TIMESTAMP(6)'})
-    updatedAt:Date
-
-    @ManyToOne(()=>Post,(post)=>post.comments,{nullable:false,onDelete:'CASCADE',onUpdate:'CASCADE'})
-    post:Post
-
-    @ManyToOne(()=>User,(user)=>user.comments,{nullable:false,onDelete:'CASCADE',onUpdate:'CASCADE'})
-    user:User
-
+  @ManyToOne(() => User, (user) => user.comments, {
+    nullable: false,
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
+  user: User;
 }

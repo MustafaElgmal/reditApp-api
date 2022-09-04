@@ -1,96 +1,90 @@
+import { auth } from "../middlewares/auth";
+import { Tag } from "./../entities/tag";
+import { AddlengthsOnPost } from "./../utils/functions";
+import { postCreate, RequestAuth } from "./../types";
 import { Router } from "express";
-import { In } from "typeorm";
 import { Post } from "../entities/post";
-import { Tag } from "../entities/tag";
 import { User } from "../entities/user";
-import { vaildatePost } from "../functions";
+import { vaildatePost } from "../utils/vaildation";
+import { In } from "typeorm";
 
 const router = Router();
 
-router.post("/", async (req, res) => {
-  const errors = await vaildatePost(req.body);
-  if (errors.error !== "") {
-    return res.status(400).send(errors);
+router.post("/", auth, async (req: RequestAuth, res) => {
+  const error = await vaildatePost(req.body);
+  if (error.error !== "") {
+    return res.status(400).json(error);
   }
   try {
-    let { title, body, userId,tagIds} = req.body;
-    const user = await User.findOne({ where: { id: userId } });
-    if (!user) {
-      return res.status(404).send({ error: "User is not found!" });
+    let { title, body, tagIds }: postCreate = req.body;
+    const user = req.user!;
+    const tags = await Tag.find({ where: { id: In(tagIds) } });
+    if (tags.length === 0) {
+      return res.status(404).json({ error: "Tag is not found!" });
     }
-    if(typeof tagIds==='number'){
-      tagIds=[tagIds]
-    }
-    const tags=await Tag.find({where:{id:In(tagIds||[])}})
-    const post = Post.create({ title, body, userId,tags});
+    const post = Post.create({ title, body, user, tags });
     await post.save();
-    res.status(201).send({ post });
+    res.status(201).json({ post });
   } catch (e) {
-    console.log(e);
-    res.status(500).send({ error: "Server is down!" });
+    res.status(500).json({ error: "Server is down!" });
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
   try {
     const posts = await Post.find({
-      relations: { comments: true, votes: true, user: true },
+      relations: {
+        comments: { user: true },
+        votes: true,
+        user: true,
+        tags: true,
+      },
     });
-    const rss = posts.map((post) => {
-      return {
-        ...post,
-        commentsTotal: post.comments.length,
-        upVotesTotal: post.votes.filter((vote) => vote.userVote === 1).length,
-        downVotesTotal: post.votes.filter((vote) => vote.userVote === -1).length,
-      };
-    });
-    res.send({ posts: rss });
+    const postswithExtraDetails = AddlengthsOnPost(posts);
+
+    res.json({ posts: postswithExtraDetails });
   } catch (e) {
-    console.log(e);
-    res.status(500).send({ error: "Server is down!" });
+    res.status(500).json({ error: "Server is down!" });
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", auth, async (req, res) => {
   const { id } = req.params;
   if (!id) {
-    return res.status(401).send({ error: "Post id is required as paramters!" });
+    return res.status(401).json({ error: "Post id is required as paramters!" });
   }
 
   try {
     const postfind = await Post.findOne({
       where: { id: +id },
-      relations: { comments: true, votes: true },
+      relations: { comments: { user: true }, votes: true, tags: true },
     });
 
     if (!postfind) {
-      return res.status(404).send({ error: "post is not found!" });
+      return res.status(404).json({ error: "post is not found!" });
     }
-    const post={...postfind,
-        commentsTotal: postfind.comments.length,
-        upVotesTotal: postfind.votes.filter((vote) => vote.userVote === 1).length,
-        downVotesTotal: postfind.votes.filter((vote) => vote.userVote === -1).length}
+    const post = AddlengthsOnPost([postfind]);
 
-    res.send({ post });
+    res.json({ post: post[0] });
   } catch (e) {
-    res.status(500).send({ error: "Server is down !" });
+    res.status(500).json({ error: "Server is down !" });
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   const { id } = req.params;
   if (!id) {
-    return res.status(401).send({ error: "Post id is required as paramters!" });
+    return res.status(401).json({ error: "Post id is required as paramters!" });
   }
   try {
     const post = await Post.findOne({ where: { id: +id } });
     if (!post) {
-      return res.status(404).send({ error: "Post not found !" });
+      return res.status(404).json({ error: "Post not found !" });
     }
     await Post.delete(parseInt(id));
-    res.send({ message: "post deleted!" });
+    res.json({ message: "post deleted!" });
   } catch (e) {
-    res.status(500).send({ error: "Server is down !" });
+    res.status(500).json({ error: "Server is down !" });
   }
 });
 export default router;

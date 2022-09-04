@@ -10,7 +10,6 @@ import commentRouter from './routers/comment'
 import voteRouter from './routers/vote' 
 import tagRouter from './routers/tag'
 
-
 const app=express()
 config()
 app.use(cors())
@@ -27,10 +26,6 @@ app.use('/tags',tagRouter)
 app.get('*',(req,res)=>{
     res.status(401).send({error:'Api not found!'})
 })
-
-
-
-
 
 const port=process.env.PORT||4000
 
