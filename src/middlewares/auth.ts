@@ -6,7 +6,7 @@ import { RequestAuth } from "../types";
 export const auth = async (req: RequestAuth, res: Response, next: NextFunction) => {
   const { authorization } = req.headers;
   if (authorization === undefined) {
-    res.status(401).json({ error: "Please Authenticate!" });
+    return res.status(401).json({ error: "Please Authenticate!" });
   }
   try {
     const { email } = jwt.verify(authorization!, process.env.PRIVITEKEY!) as {

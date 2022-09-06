@@ -37,7 +37,6 @@ router.post("/signin", async (req, res) => {
   }
   try {
     const { email }: { email: string } = req.body;
-    const user = await User.findOne({ where: { email } });
     const token=generateAuth(email)
     res.json({ token });
   } catch (e) {
