@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/",auth,async (req, res) => {
+router.get("/",async (req, res) => {
   try {
     const tags = await Tag.find();
     res.json({ tags });
