@@ -57,7 +57,7 @@ router.get("/:id", auth, async (req, res) => {
   try {
     const postfind = await Post.findOne({
       where: { id: +id },
-      relations: { comments: { user: true }, votes: true, tags: true },
+      relations: {user: true, comments: { user: true }, votes: true, tags: true },
     });
 
     if (!postfind) {
